@@ -1,0 +1,573 @@
+Convert this script 
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/cypherdh/VanisUILIB/main/.gitignore"))()
+local Window = library:CreateWindow("RickHub", "V2", 10044538000)
+local Tab = Window:CreateTab("Main")
+local Page = Tab:CreateFrame("Main")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+Toggle =
+    Page:CreateToggle(
+    "AutoFarm Chests",
+    "AutoFarms Chests",
+    function(gay)
+        _G.ac = gay
+while _G.ac do
+    task.wait()
+    local closestChest, closestDist
+    for _, v in pairs(game:GetService("Workspace"):GetChildren()) do
+        if v:IsA("Part") and string.sub(v.Name, -2) == "-p" then
+            local dist = (v.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude
+            if not closestDist or dist < closestDist then
+                closestChest = v
+                closestDist = dist
+            end
+        end
+    end
+    
+    if closestChest then
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = closestChest.CFrame
+        workspace.FallenPartsDestroyHeight = 0 / 0
+        task.wait()
+        local VirtualInputManager = game:GetService("VirtualInputManager")
+        VirtualInputManager:SendKeyEvent(true, "E", false, nil)
+        task.wait()
+        VirtualInputManager:SendKeyEvent(false, "E", false, nil)
+        task.wait()
+    end
+    
+    task.wait()
+end
+end)
+
+
+
+Toggle =
+    Page:CreateToggle(
+    "Anti-Stuck",
+    "Turn on with Autofarm",
+    function(pro)
+        _G.as = pro
+        while _G.as do
+            wait(3)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-171.533, 193.89, 14.47)
+            game:GetService("Players"):Chat("/e dance2")
+        end
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Get All Items - Client Sided",
+    "Self Explanatory",
+    function()
+        function recurse(instance)
+            if instance:IsA("Tool") or instance:IsA("HopperBin") then
+                print(instance:GetFullName())
+                if workspace.FilteringEnabled == false then
+                    c = instance:Clone()
+                    c.Parent = game.Players.LocalPlayer.Backpack
+                else
+                    instance.Parent = game.Players.LocalPlayer.Backpack
+                end
+            end
+            for _, child in ipairs(instance:GetChildren()) do
+                recurse(child)
+            end
+        end
+        recurse(game)
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Open All Chests",
+    "Opens All Chests",
+    function()
+        for i, v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+            if v.ClassName == "Tool" then
+                v.Parent = game:GetService("Players").LocalPlayer.Character
+            end
+        end
+        for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+            if v.ClassName == "Tool" then
+                v:Activate()
+            end
+        end
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Anti-Afk",
+    "Prevents Getting Kicked",
+    function()
+        local vu = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:connect(
+            function()
+                vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                wait(1)
+                vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            end
+        )
+    end
+)
+
+Page:CreateSlider(
+    "WalkSpeed",
+    1,
+    500,
+    function(sp)
+        pcall(
+            function()
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = sp
+            end
+        )
+    end
+)
+
+Page:CreateSlider(
+    "JumpPower",
+    1,
+    500,
+    function(jp)
+        pcall(
+            function()
+                game.Players.LocalPlayer.Character.Humanoid.JumpPower = jp
+            end
+        )
+    end
+)
+
+Page:CreateSlider(
+    "Kill Aura Range",
+    1,
+    1000,
+    function(pablohot)
+        _G.range = pablohot
+    end
+)
+
+Toggle =
+    Page:CreateToggle(
+    "Kill Aura",
+    "Auto Kill Players Nearby. Equip Axe/Weapon First",
+    function(RobloxSegsss)
+        _G.ka = RobloxSegsss
+        while _G.ka do
+            wait()
+            local player = game:GetService("Players").LocalPlayer
+            game:GetService("RunService").RenderStepped:Connect(
+                function()
+                    local p = game.Players:GetPlayers()
+                    for i = 2, #p do
+                        local v = p[i].Character
+                        if
+                            v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and
+                                v:FindFirstChild("HumanoidRootPart") and
+                                player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range
+                         then
+                            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+                            if tool and tool:FindFirstChild("Handle") then
+                                tool:Activate()
+                                for i, v in next, v:GetChildren() do
+                                    if v:IsA("BasePart") then
+                                        firetouchinterest(tool.Handle, v, 0)
+                                        firetouchinterest(tool.Handle, v, 1)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            )
+        end
+    end
+)
+
+local Page = Tab:CreateFrame("Instant Exploits")
+
+Button =
+    Page:CreateButton(
+    "Click to kill",
+    "Click on a Mob to Insta-Kill",
+    function()
+        local player = game.Players.LocalPlayer
+        local mouse = player:GetMouse()
+        mouse.Button1Down:connect(
+            function()
+                local mT = mouse.Target
+                if mT.Parent.Humanoid then
+                    local hum = mT.Parent.Humanoid
+                    hum.Health = 0
+                end
+            end
+        )
+        CreateNotification(
+            "RickHubV2",
+            "Insta-Kill Activated!",
+            function()
+            end
+        )
+    end
+)
+
+Toggle =
+    Page:CreateToggle(
+    "Auto-Boss",
+    "AutoBring Bosses with built in Insta-Kill",
+    function(lilbaby)
+        _G.abb = lilbaby
+        while _G.abb do
+            task.wait(.1)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(961, 2, -455)
+            for i, v in pairs(game:GetService("Workspace")["boss's"]:GetChildren()) do
+                if v:IsA("Model") then
+                    v.HumanoidRootPart.CanCollide = false
+                    v.HumanoidRootPart.CFrame = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+                    v.Humanoid.Health = 0
+                end
+            end
+        end
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Get Boombox",
+    "Gives you Boombox",
+    function()
+        for i = 1, 28 do
+            wait(1)
+            for i, v in pairs(game:GetDescendants()) do
+                if v:IsA("RemoteEvent") then
+                    v:FireServer()
+                    if v:IsA("BindableEvent") then
+                        v:Fire()
+                        if v:IsA("RemoteFunction") then
+                            v:InvokeServer()
+                            CreateNotification(
+                                "RickHubV2",
+                                "Just wait Mr.Smith;)",
+                                function(value)
+                                end
+                            )
+                        end
+                    end
+                end
+            end
+        end
+    end
+)
+
+Label = Page:CreateLabel("hey bby;) - epik")
+
+local Page = Tab:CreateFrame("Teleports")
+
+Button = Page:CreateButton("Destroys Anticheat", "Tap this Button First!", function()
+local part = game:GetService("Workspace").Omni.Kick
+local shitanticheat = game:GetService("Workspace").Shop.Room["Anti Cheat"]
+part:Destroy()
+shitanticheat:Destroy()
+end)
+
+Button =
+    Page:CreateButton(
+    "New Shop",
+    "Teleports to the New Shop",
+    function()
+        local CFrameEnd = CFrame.new(1258, -52, 539)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Omni Devourer",
+    "Teleports to the platform",
+    function()
+        local CFrameEnd = CFrame.new(-1090, 53, 74046)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Label = Page:CreateLabel("Teleports Under this Are Broken And Is Currently Updating.")
+
+Button =
+    Page:CreateButton(
+    "Boiling Seller",
+    "Teleports to Boiling Seller",
+    function()
+        local CFrameEnd = CFrame.new(273, 4, -163)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Oil Seller",
+    "Teleports to Oil Seller",
+    function()
+        local CFrameEnd = CFrame.new(160, 24, 188)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Blood Seller",
+    "Teleports to Blood Seller",
+    function()
+        local CFrameEnd = CFrame.new(159, 24, 175)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Ruler",
+    "Teleports to Ruler",
+    function()
+        local CFrameEnd = CFrame.new(139, 24, 196)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Light Seller",
+    "Teleports to Light Seller",
+    function()
+        local CFrameEnd = CFrame.new(-142, 5, 381)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "RAD Seller",
+    "Teleports to RAD Seller",
+    function()
+        local CFrameEnd = CFrame.new(197, -19, 3)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Acid Seller",
+    "Teleports to Acid Seller",
+    function()
+        local CFrameEnd = CFrame.new(197, -19, 3)
+        local Time = 1
+        local tween =
+            game:GetService("TweenService"):Create(
+            game.Players.LocalPlayer.Character.HumanoidRootPart,
+            TweenInfo.new(Time),
+            {CFrame = CFrameEnd}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+    end
+)
+
+local Page = Tab:CreateFrame("Server")
+
+Button =
+    Page:CreateButton(
+    "Rejoin Server",
+    "Rejoins the same server.",
+    function()
+        task.wait(.1)
+        CreateNotification(
+            "RickHubV2",
+            "Rejoining..",
+            function()
+                local ts = game:GetService("TeleportService")
+                local p = game:GetService("Players").LocalPlayer
+                ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, p)
+            end
+        )
+    end
+)
+
+local Page = Tab:CreateFrame("Notifier")
+Page:CreateSlider("Webhook Cooldown", 3, 5,function(huh)
+    _G.Cooldown2 = huh
+ end)
+
+TextBox =
+    Page:CreateBox(
+    "Webhook Link",
+    10044538000,
+    function(sham)
+        getgenv().webhook = sham
+    end
+)
+
+Toggle =
+    Page:CreateToggle(
+    "Chest Notifier",
+    "-Put Webhook For It To Work",
+    function(shazam)
+        _G.notif = shazam
+        while _G.notif do
+            wait(_G.Cooldown2)
+            local RequestType = syn.request or http.request or request
+            function SendWebhookLog(Message)
+                local Request =
+                    RequestType(
+                    {
+                        ["Url"] = getgenv().webhook,
+                        ["Method"] = "POST",
+                        ["Headers"] = {["Content-Type"] = "application/json"},
+                        ["Body"] = game:GetService "HttpService":JSONEncode({["content"] = Message})
+                    }
+                )
+                return SRequest
+            end
+
+            game:GetService "Players".LocalPlayer.Backpack.ChildAdded:Connect(
+                function(Item)
+                    SendWebhookLog("" .. tostring(Item) .. " Found!")
+                end
+            )
+        end
+    end
+)
+
+local Page = Tab:CreateFrame("AutoKick")
+
+Toggle =
+    Page:CreateToggle(
+    "AutoKick when Mod Joins",
+    "AutoKicks you when a staff or a mod joins",
+    function(yee)
+        _G.autokickondeeznuts = yee
+        while _G.autokickondeeznuts do
+            wait()
+            local Players = game:GetService("Players")
+            local blacklist = {
+                "DimesionalOne",
+                "R3zlta",
+                "Brname1234",
+                "Rainbloxses",
+                "Kirill54643",
+                "bromy_dad",
+                "NovaGamingBird",
+                "jinnoil214",
+                "Dragol ii",
+                "Rainbloxses",
+                "idk_ujyy"
+            }
+
+            Players.PlayerAdded:Connect(
+                function(player)
+                    if table.find(blacklist, player.Name) then
+                        Players.LocalPlayer:Kick("A Staff or An Owner Joined The Server -Rickhub")
+                    end
+                end
+            )
+        end
+    end
+)
+
+local Page = Tab:CreateFrame("Credits")
+
+Button =
+    Page:CreateButton(
+    "Owner",
+    "Rick Astley#3006",
+    function()
+    end
+)
+
+Button =
+    Page:CreateButton(
+    "Scripter",
+    "mjtbincourse#0001",
+    function()
+    end
+)
+
+local prt = Instance.new("Part")
+prt.Parent = game.Workspace
+prt.Name = "Part"
+prt.Size = Vector3.new(10, 1, 10)
+prt.CFrame = CFrame.new(-171.672, 190.39, 14.283)
+prt.Anchored = true
+prt.BackSurface = ("SmoothNoOutlines")
+prt.BottomSurface = ("SmoothNoOutlines")
+prt.FrontSurface = ("SmoothNoOutlines")
+prt.LeftSurface = ("SmoothNoOutlines")
+prt.RightSurface = ("SmoothNoOutlines")
+prt.TopSurface = ("SmoothNoOutlines")
+prt.Material = ("SmoothPlastic")
+while wait() do
+    prt.BrickColor = BrickColor.random()
+end
+to use this ui lib 
+local UILib = loadstring(game:HttpGet('https://raw.githubusercontent.com/StepBroFurious/Script/main/HydraHubUi.lua'))()
