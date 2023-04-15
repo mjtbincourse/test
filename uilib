@@ -1,0 +1,316 @@
+-- Constants
+local DROPDOWN_HEIGHT = 25
+local BUTTON_HEIGHT = 20
+local TOGGLE_SIZE = 20
+local COLOR_PICKER_SIZE = 20
+
+-- Helper functions
+local function createRoundedBox(name, parent, size, position, color, cornerRadius)
+    local roundedBox = Instance.new("ImageLabel")
+    roundedBox.Name = name
+    roundedBox.Parent = parent
+    roundedBox.Size = size
+    roundedBox.Position = position
+    roundedBox.BackgroundTransparency = 1
+    roundedBox.Image = "rbxassetid://5044292555"
+    roundedBox.ImageColor3 = color
+    roundedBox.ImageTransparency = 0.4
+    roundedBox.ScaleType = Enum.ScaleType.Slice
+    roundedBox.SliceCenter = Rect.new(4, 4, 252, 252)
+    roundedBox.SliceScale = cornerRadius / 252
+
+    return roundedBox
+end
+
+-- Public functions
+local Library = {}
+function Library:CreateUI(title)
+    local ui = {}
+
+    -- Create main frame
+    local frame = Instance.new("Frame")
+    frame.Name = "UIFrame"
+    frame.Size = UDim2.new(0, 200, 0, 300)
+    frame.Position = UDim2.new(0.5, -100, 0.5, -150)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    frame.BorderSizePixel = 0
+    frame.ZIndex = 2
+
+    -- Create title bar
+    local titleBar = createRoundedBox("TitleBar", frame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 0), Color3.fromRGB(70, 70, 70), 10)
+
+    local titleText = Instance.new("TextLabel")
+    titleText.Name = "TitleText"
+    titleText.Parent = titleBar
+    titleText.Size = UDim2.new(1, 0, 1, 0)
+    titleText.Position = UDim2.new(0, 5, 0, 0)
+    titleText.BackgroundTransparency = 1
+    titleText.Font = Enum.Font.GothamBold
+    titleText.Text = title
+    titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleText.TextSize = 12
+    titleText.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Create main panel
+    local mainPanel = createRoundedBox("MainPanel", frame, UDim2.new(1, -10, 1, -30), UDim2.new(0, 5, 0, 25), Color3.fromRGB(70, 70, 70), 10)
+
+    -- Dropdown function
+    function ui:CreateDropdown(title, options, callback)
+        local dropdown = {}
+
+        -- Create dropdown frame
+        local dropdownFrame = Instance.new("Frame")
+        dropdownFrame.Name = "Dropdown"
+        dropdownFrame.Parent = mainPanel
+        dropdownFrame.Size = UDim2.new(1, 0, 0, DROPDOWN_HEIGHT)
+        dropdownFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        dropdownFrame.BorderSizePixel = 0
+        dropdownFrame.ZIndex = 3
+
+        -- Create
+-- Create a dropdown element
+function Dropdown:CreateDropdown(title, options, defaultOption, callback)
+defaultOption = defaultOption or options[1]
+local DropdownFrame = Instance.new("Frame")
+DropdownFrame.Name = title
+DropdownFrame.BackgroundTransparency = 1
+DropdownFrame.Size = UDim2.new(1, 0, 0, 35)
+DropdownFrame.LayoutOrder = self:GetLayoutOrder()
+
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Text = title
+Title.TextSize = 14
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Position = UDim2.new(0, 5, 0, 0)
+Title.Size = UDim2.new(1, -10, 0, 20)
+Title.Font = Enum.Font.SourceSansSemibold
+Title.BackgroundTransparency = 1
+Title.Parent = DropdownFrame
+
+local DropdownButton = Instance.new("TextButton")
+DropdownButton.Name = "DropdownButton"
+DropdownButton.Text = defaultOption
+DropdownButton.TextSize = 14
+DropdownButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DropdownButton.Position = UDim2.new(0, 5, 0, 20)
+DropdownButton.Size = UDim2.new(1, -10, 0, 15)
+DropdownButton.Font = Enum.Font.SourceSans
+DropdownButton.BackgroundTransparency = 0.9
+DropdownButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+DropdownButton.BorderSizePixel = 0
+DropdownButton.Parent = DropdownFrame
+
+local DropdownMenu = Instance.new("Frame")
+DropdownMenu.Name = "DropdownMenu"
+DropdownMenu.BackgroundTransparency = 0.9
+DropdownMenu.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+DropdownMenu.BorderSizePixel = 0
+DropdownMenu.Position = UDim2.new(0, 0, 1, 1)
+DropdownMenu.Size = UDim2.new(1, 0, 0, 0)
+DropdownMenu.Visible = false
+DropdownMenu.Parent = DropdownFrame
+
+local DropdownMenuLayout = Instance.new("UIListLayout")
+DropdownMenuLayout.SortOrder = Enum.SortOrder.LayoutOrder
+DropdownMenuLayout.Parent = DropdownMenu
+
+DropdownButton.MouseButton1Click:Connect(function()
+    DropdownMenu.Visible = not DropdownMenu.Visible
+end)
+
+for i, option in ipairs(options) do
+    local OptionButton = Instance.new("TextButton")
+    OptionButton.Name = option
+    OptionButton.Text = option
+    OptionButton.TextSize = 14
+    OptionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    OptionButton.Position = UDim2.new(0, 5, 0, (i - 1) * 20)
+    OptionButton.Size = UDim2.new(1, -10, 0, 15)
+    OptionButton.Font = Enum.Font.SourceSans
+    OptionButton.BackgroundTransparency = 0.9
+    OptionButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    OptionButton.BorderSizePixel = 0
+    OptionButton.LayoutOrder = i
+    OptionButton.Parent = DropdownMenu
+
+    OptionButton.MouseButton1Click:Connect(function()
+        DropdownMenu.Visible = false
+        DropdownButton.Text = option
+        if callback then
+            callback(option)
+        end
+    end)
+
+    if option == defaultOption and callback then
+callback(defaultOption)
+end
+local dropdownFrame = Instance.new("Frame")
+dropdownFrame.Name = "DropdownFrame"
+dropdownFrame.Size = UDim2.new(0, size.X, 0, 30)
+dropdownFrame.BackgroundTransparency = 1
+dropdownFrame.Parent = dropdownButton
+
+local dropdownIcon = Instance.new("ImageLabel")
+dropdownIcon.Name = "DropdownIcon"
+dropdownIcon.Image = "rbxassetid://3239756769"
+dropdownIcon.ImageColor3 = theme.dropdown.arrowColor
+dropdownIcon.BackgroundTransparency = 1
+dropdownIcon.Position = UDim2.new(1, -20, 0.5, -8)
+dropdownIcon.Size = UDim2.new(0, 16, 0, 16)
+dropdownIcon.AnchorPoint = Vector2.new(1, 0.5)
+dropdownIcon.Parent = dropdownFrame
+
+local dropdownList = Instance.new("Frame")
+dropdownList.Name = "DropdownList"
+dropdownList.Position = UDim2.new(0, 0, 1, 1)
+dropdownList.Size = UDim2.new(1, 0, 0, 0)
+dropdownList.BackgroundTransparency = 1
+dropdownList.Parent = dropdownFrame
+
+local dropdownListLayout = Instance.new("UIListLayout")
+dropdownListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+dropdownListLayout.Parent = dropdownList
+
+local dropdownListPadding = Instance.new("UIPadding")
+dropdownListPadding.PaddingBottom = UDim.new(0, 5)
+dropdownListPadding.PaddingTop = UDim.new(0, 5)
+dropdownListPadding.PaddingLeft = UDim.new(0, 5)
+dropdownListPadding.PaddingRight = UDim.new(0, 5)
+dropdownListPadding.Parent = dropdownList
+
+local dropdownListCanvas = Instance.new("Frame")
+dropdownListCanvas.BackgroundTransparency = 1
+dropdownListCanvas.BorderSizePixel = 0
+dropdownListCanvas.Size = UDim2.new(1, 0, 0, 0)
+dropdownListCanvas.Parent = dropdownList
+
+local canvasSize = 0
+local canvasTweening = false
+
+local function resizeCanvas(newSize)
+    if not canvasTweening then
+        canvasTweening = true
+        dropdownListCanvas:TweenSize(UDim2.new(1, 0, 0, newSize), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 0.2, true, function()
+            canvasTweening = false
+        end)
+    end
+end
+
+    return Dropdown
+end
+
+local function addOption(optionName)
+    local optionButton = Instance.new("TextButton")
+    optionButton.Name = optionName
+    optionButton.Text = optionName
+    optionButton.BackgroundTransparency = 1
+    optionButton.TextColor3 = theme.dropdown.textColor
+    optionButton.TextSize = theme.dropdown.textSize
+    optionButton.Font = theme.font
+    optionButton.Size = UDim2.new(1, 0, 0, 25)
+    optionButton.LayoutOrder = #dropdownListCanvas:GetChildren() + 1
+    optionButton.Parent = dropdownListCanvas
+
+    optionButton.MouseButton1Click:Connect(function()
+        dropdownButton.Text = optionButton.Text
+        toggleDropdown(false)
+        if callback then
+            callback(optionName)
+        end
+    end)
+
+    canvasSize = canvasSize + optionButton.AbsoluteSize.Y + dropdownListPadding.PaddingBottom.Offset
+    resizeCanvas(canvasSize)
+end
+
+for _, option in ipairs(options) do
+    local button = Instance.new("TextButton")
+    button.Name = option
+    button.Text = option
+    button.Size = UDim2.new(1, 0, 0, 30)
+    button.Position = UDim2.new(0, 0, 0, 30 * (#dropdownButtons - 1))
+    button.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    button.BorderSizePixel = 0
+    button.Font = Enum.Font.GothamSemibold
+    button.TextSize = 14
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.ZIndex = 4
+    button.Parent = dropdownFrame
+
+    table.insert(dropdownButtons, button)
+
+    button.MouseButton1Click:Connect(function()
+        selectOption(option)
+    end)
+end
+
+dropdownFrame.Size = UDim2.new(1, 0, 0, 30 * #dropdownButtons)
+
+return dropdownFrame, dropdownText
+end
+
+function library:CreateColorPicker(defaultColor, callback)
+local colorPickerFrame = Instance.new("Frame")
+colorPickerFrame.Name = "ColorPicker"
+colorPickerFrame.Size = UDim2.new(0, 250, 0, 200)
+colorPickerFrame.BackgroundTransparency = 0.8
+colorPickerFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+colorPickerFrame.BorderSizePixel = 0
+colorPickerFrame.ZIndex = 4
+local hue, sat, val = Color3.toHSV(defaultColor)
+sat = sat == 0 and 1 or sat
+val = val == 0 and 1 or val
+
+local hueFrame = Instance.new("Frame")
+hueFrame.Name = "HueFrame"
+hueFrame.Size = UDim2.new(0, 30, 1, 0)
+hueFrame.BorderSizePixel = 0
+hueFrame.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+hueFrame.Parent = colorPickerFrame
+
+local satValFrame = Instance.new("ImageLabel")
+satValFrame.Name = "SaturationValueFrame"
+satValFrame.Size = UDim2.new(1, -35, 1, 0)
+satValFrame.Position = UDim2.new(0, 35, 0, 0)
+satValFrame.BackgroundTransparency = 0
+satValFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+satValFrame.BorderSizePixel = 0
+satValFrame.Image = "rbxassetid://4155801252"
+satValFrame.ImageColor3 = Color3.fromHSV(hue, sat, val)
+satValFrame.Parent = colorPickerFrame
+
+local pickerFrame = Instance.new("ImageLabel")
+pickerFrame.Name = "PickerFrame"
+pickerFrame.Size = UDim2.new(0, 4, 0, 4)
+pickerFrame.BorderSizePixel = 0
+pickerFrame.Image = "rbxassetid://2454009029"
+pickerFrame.Parent = satValFrame
+
+local colorBox = Instance.new("ImageButton")
+colorBox.Name = "ColorBox"
+colorBox.Size = UDim2.new(0, 30, 0, 30)
+colorBox.Position = UDim2.new(1, -35, 0, 0)
+colorBox.BackgroundTransparency = 0
+colorBox.BackgroundColor3 = defaultColor
+colorBox.BorderSizePixel = 0
+colorBox.Parent = colorPickerFrame
+colorBox.BackgroundColor3 = color
+colorBox.BorderSizePixel = 0
+colorBox.Size = UDim2.new(0, 20, 0, 20)
+colorBox.Position = UDim2.new(0, (index - 1) * 25 + 5, 0, 30)
+colorBox.MouseButton1Down:Connect(function()
+    pickerPosition = math.clamp(Mouse.X - colorBox.AbsolutePosition.X, 0, 200)
+    colorBoxIndicator.Position = UDim2.new(0, pickerPosition - 2, 0, -2)
+    updateColor(pickerPosition / 200)
+end)
+
+index = index + 1
+end
+
+return color, ColorPicker
+end
+
+return Library
+end
